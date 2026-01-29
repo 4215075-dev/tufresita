@@ -95,11 +95,15 @@
 
                     <!-- User Access -->
                     <div id="userAccess" class="space-y-4 hidden">
-                        <input type="text" id="accessCode" placeholder="Ingresa tu código de acceso" maxlength="9"
+                        <input type="text" id="accessCode" placeholder="XXXX-XXXX" maxlength="9"
                             class="w-full py-3 px-4 bg-white/5 border border-purple-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/70 transition-all text-center tracking-wider text-lg font-mono uppercase"
+                            autocomplete="off"
+                            autocorrect="off"
+                            autocapitalize="characters"
+                            spellcheck="false"
                             onkeypress="if(event.key === 'Enter') verifyAccessCode()"
                             oninput="this.value = this.value.toUpperCase()">
-                        <button onclick="verifyAccessCode()" class="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-lg text-white font-semibold transition-all duration-300 transform hover:scale-105">
+                        <button onclick="verifyAccessCode()" class="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-lg text-white font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95">
                             Acceder
                         </button>
                     </div>
@@ -282,6 +286,12 @@
 
         // Initialize
         window.onload = function() {
+            // Check localStorage availability
+            if (!isLocalStorageAvailable()) {
+                console.warn('LocalStorage no disponible en este navegador');
+                alert('Nota: Los datos se guardarán solo durante esta sesión. Para funcionamiento completo, permite el almacenamiento en la configuración del navegador.');
+            }
+            
             setTimeout(() => {
                 document.getElementById('loadingScreen').classList.add('hidden');
                 document.getElementById('loginScreen').classList.remove('hidden');
@@ -291,29 +301,93 @@
             setupProtection();
         };
 
-        // LocalStorage helpers
+        // Check localStorage availability
+        function isLocalStorageAvailable() {
+            try {
+                const test = '__storage_test__';
+                localStorage.setItem(test, test);
+                localStorage.removeItem(test);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // LocalStorage helpers with mobile fallback
         function getContents() {
-            return JSON.parse(localStorage.getItem('fresita-contents') || '[]');
+            try {
+                if (!isLocalStorageAvailable()) {
+                    console.warn('LocalStorage no disponible, usando memoria temporal');
+                    return window.tempContents || [];
+                }
+                return JSON.parse(localStorage.getItem('fresita-contents') || '[]');
+            } catch (e) {
+                console.error('Error leyendo contenido:', e);
+                return window.tempContents || [];
+            }
         }
 
         function saveContents(contents) {
-            localStorage.setItem('fresita-contents', JSON.stringify(contents));
+            try {
+                if (!isLocalStorageAvailable()) {
+                    window.tempContents = contents;
+                    return;
+                }
+                localStorage.setItem('fresita-contents', JSON.stringify(contents));
+            } catch (e) {
+                console.error('Error guardando contenido:', e);
+                window.tempContents = contents;
+            }
         }
 
         function getAccessCodes() {
-            return JSON.parse(localStorage.getItem('fresita-codes') || '[]');
+            try {
+                if (!isLocalStorageAvailable()) {
+                    return window.tempCodes || [];
+                }
+                return JSON.parse(localStorage.getItem('fresita-codes') || '[]');
+            } catch (e) {
+                console.error('Error leyendo códigos:', e);
+                return window.tempCodes || [];
+            }
         }
 
         function saveAccessCodes(codes) {
-            localStorage.setItem('fresita-codes', JSON.stringify(codes));
+            try {
+                if (!isLocalStorageAvailable()) {
+                    window.tempCodes = codes;
+                    return;
+                }
+                localStorage.setItem('fresita-codes', JSON.stringify(codes));
+            } catch (e) {
+                console.error('Error guardando códigos:', e);
+                window.tempCodes = codes;
+            }
         }
 
         function getUsedCodes() {
-            return JSON.parse(localStorage.getItem('fresita-used-codes') || '[]');
+            try {
+                if (!isLocalStorageAvailable()) {
+                    return window.tempUsedCodes || [];
+                }
+                return JSON.parse(localStorage.getItem('fresita-used-codes') || '[]');
+            } catch (e) {
+                console.error('Error leyendo códigos usados:', e);
+                return window.tempUsedCodes || [];
+            }
         }
 
         function saveUsedCodes(codes) {
-            localStorage.setItem('fresita-used-codes', JSON.stringify(codes));
+            try {
+                if (!isLocalStorageAvailable()) {
+                    window.tempUsedCodes = codes;
+                    return;
+                }
+                localStorage.setItem('fresita-used-codes', JSON.stringify(codes));
+            } catch (e) {
+                console.error('Error guardando códigos usados:', e);
+                window.tempUsedCodes = codes;
+            }
         }
 
         // Login functions
@@ -341,9 +415,20 @@
         }
 
         function verifyAccessCode() {
-            const code = document.getElementById('accessCode').value.toUpperCase();
+            const codeInput = document.getElementById('accessCode');
+            const code = codeInput.value.toUpperCase().trim();
+            
+            if (!code) {
+                alert('Por favor ingresa un código');
+                return;
+            }
+            
             const codes = getAccessCodes();
             const usedCodes = getUsedCodes();
+            
+            console.log('Verificando código:', code);
+            console.log('Códigos disponibles:', codes);
+            console.log('Códigos usados:', usedCodes);
             
             const validCode = codes.find(c => c.code === code && !c.used);
             
@@ -365,7 +450,7 @@
             } else if (usedCodes.find(c => c.code === code)) {
                 alert('Este código ya fue utilizado');
             } else {
-                alert('Código inválido');
+                alert('Código inválido. Verifica que esté escrito correctamente.');
             }
         }
 
