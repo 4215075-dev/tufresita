@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Fresita 🍓 - Contenido Exclusivo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        .bg-pattern {
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+');
+            opacity: 0.2;
+        }
+        
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(to right, #c084fc, #f9a8d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        img, video {
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-purple-900 to-black min-h-screen text-white">
+    
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="fixed inset-0 flex items-center justify-center z-50">
+        <div class="text-center">
+            <div class="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-purple-500 mb-4"></div>
+            <p class="text-white text-xl">Cargando Tu Fresita 🍓...</p>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="hidden fixed inset-0 flex items-center justify-center p-4 z-40">
+        <div class="bg-pattern absolute inset-0"></div>
+        <div class="relative z-10 w-full max-w-md">
+            <div class="bg-black/40 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-8 shadow-2xl">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                    </div>
+                    <h1 class="text-3xl font-bold text-white mb-2">Tu Fresita 🍓</h1>
+                    <p class="text-gray-400">Contenido exclusivo y privado</p>
+                </div>
+
+                <div class="space-y-4">
+                    <button onclick="toggleLoginMode()" class="w-full py-3 px-4 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/50 rounded-lg text-purple-300 transition-all duration-300 flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                        <span id="loginModeText">Acceso Administrador</span>
+                    </button>
+
+                    <!-- Admin Login -->
+                    <div id="adminLogin" class="space-y-4">
+                        <div class="relative">
+                            <input type="password" id="adminPassword" placeholder="Contraseña de administrador" 
+                                class="w-full py-3 px-4 bg-white/5 border border-purple-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/70 transition-all"
+                                onkeypress="if(event.key === 'Enter') adminLogin()">
+                            <button onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors">
+                                <svg id="eyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <button onclick="adminLogin()" class="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-lg text-white font-semibold transition-all duration-300 transform hover:scale-105">
+                            Iniciar Sesión
+                        </button>
+                    </div>
+
+                    <!-- User Access -->
+                    <div id="userAccess" class="space-y-4 hidden">
+                        <input type="text" id="accessCode" placeholder="Ingresa tu código de acceso" maxlength="9"
+                            class="w-full py-3 px-4 bg-white/5 border border-purple-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/70 transition-all text-center tracking-wider text-lg font-mono uppercase"
+                            onkeypress="if(event.key === 'Enter') verifyAccessCode()"
+                            oninput="this.value = this.value.toUpperCase()">
+                        <button onclick="verifyAccessCode()" class="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-lg text-white font-semibold transition-all duration-300 transform hover:scale-105">
+                            Acceder
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-6 border-t border-purple-500/20">
+                    <div class="flex items-start gap-2 text-sm text-gray-400">
+                        <svg class="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p>Este contenido está protegido. Los códigos son de un solo uso y no se permite grabar o capturar el contenido.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="hidden p-6">
+        <div class="bg-pattern absolute inset-0"></div>
+        <div class="relative z-10">
+            <!-- Header -->
+            <div class="max-w-7xl mx-auto mb-8">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-4xl font-bold gradient-text">Tu Fresita 🍓 - Panel Admin</h1>
+                        <p class="text-gray-400 mt-1">Gestiona tu contenido exclusivo</p>
+                    </div>
+                    <button onclick="logout()" class="px-6 py-3 bg-red-600/20 hover:bg-red-600/30 border border-red-500/50 rounded-lg text-red-300 transition-all duration-300">
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Upload Section -->
+                <div class="lg:col-span-2 bg-black/40 backdrop-blur-xl border border-indigo-500/30 rounded-2xl p-6">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                        Subir Contenido
+                    </h2>
+
+                    <div class="space-y-4">
+                        <div class="flex gap-4">
+                            <button onclick="setUploadType('image')" id="imageBtn" class="flex-1 py-3 px-4 rounded-lg border bg-purple-600 border-purple-500 text-white transition-all">
+                                <svg class="w-5 h-5 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                Imagen
+                            </button>
+                            <button onclick="setUploadType('video')" id="videoBtn" class="flex-1 py-3 px-4 rounded-lg border bg-white/5 border-indigo-500/30 text-gray-400 hover:bg-white/10 transition-all">
+                                <svg class="w-5 h-5 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                                Video
+                            </button>
+                        </div>
+
+                        <label class="block">
+                            <div id="uploadArea" class="w-full h-64 border-2 border-dashed border-indigo-500/50 rounded-lg flex items-center justify-center cursor-pointer hover:border-indigo-500 hover:bg-white/5 transition-all">
+                                <div id="uploadPlaceholder" class="text-center">
+                                    <svg class="w-12 h-12 mx-auto mb-2 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                    <p class="text-gray-400">Click para seleccionar archivo</p>
+                                    <p class="text-sm text-gray-500 mt-1" id="uploadTypeText">JPG, PNG, GIF</p>
+                                </div>
+                                <div id="uploadPreview" class="hidden relative w-full h-full p-4"></div>
+                            </div>
+                            <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="handleFileUpload(event)">
+                        </label>
+
+                        <textarea id="uploadDescription" placeholder="Descripción (opcional)" rows="3"
+                            class="w-full py-3 px-4 bg-white/5 border border-indigo-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/70 transition-all resize-none"></textarea>
+
+                        <button onclick="saveContent()" class="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-lg text-white font-semibold transition-all duration-300 transform hover:scale-105">
+                            Guardar Contenido
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Access Codes Section -->
+                <div class="bg-black/40 backdrop-blur-xl border border-indigo-500/30 rounded-2xl p-6">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                        Códigos de Acceso
+                    </h2>
+
+                    <button onclick="generateAccessCode()" class="w-full py-3 px-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg text-white font-semibold transition-all duration-300 transform hover:scale-105 mb-4">
+                        Generar Nuevo Código
+                    </button>
+
+                    <div id="codesList" class="space-y-2 max-h-96 overflow-y-auto"></div>
+                </div>
+            </div>
+
+            <!-- Content Gallery -->
+            <div class="max-w-7xl mx-auto mt-6">
+                <div class="bg-black/40 backdrop-blur-xl border border-indigo-500/30 rounded-2xl p-6">
+                    <h2 class="text-2xl font-bold mb-6">Contenido Subido (<span id="contentCount">0</span>)</h2>
+                    <div id="contentGallery" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User View -->
+    <div id="userView" class="hidden p-6">
+        <div class="bg-pattern absolute inset-0"></div>
+        <div class="relative z-10">
+            <div class="max-w-6xl mx-auto">
+                <!-- Header -->
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h1 class="text-4xl font-bold gradient-text">Tu Fresita 🍓</h1>
+                        <p class="text-gray-400 mt-1">Código: <span id="userCode"></span></p>
+                    </div>
+                    <button onclick="logout()" class="px-6 py-3 bg-red-600/20 hover:bg-red-600/30 border border-red-500/50 rounded-lg text-red-300 transition-all duration-300">
+                        Salir
+                    </button>
+                </div>
+
+                <div id="viewedWarning" class="hidden mb-6 p-4 bg-yellow-900/20 border border-yellow-500/50 rounded-lg">
+                    <p class="text-yellow-400 text-center">Ya has visto el contenido. Este código ya no puede ser utilizado nuevamente.</p>
+                </div>
+
+                <div id="userContentGallery" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
+
+                <!-- Warning -->
+                <div class="mt-8 p-6 bg-red-900/20 border border-red-500/50 rounded-xl">
+                    <div class="flex items-start gap-3">
+                        <svg class="w-6 h-6 text-red-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div>
+                            <h3 class="text-red-400 font-semibold mb-2">Advertencia de Protección</h3>
+                            <ul class="text-sm text-gray-300 space-y-1">
+                                <li>• Las capturas de pantalla están deshabilitadas</li>
+                                <li>• El contenido solo puede verse una vez</li>
+                                <li>• No se permite descargar o grabar</li>
+                                <li>• Tu código quedará inhabilitado después de ver el contenido</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Viewer Modal -->
+    <div id="contentViewer" class="hidden fixed inset-0 bg-black z-50 flex items-center justify-center">
+        <div id="contentDisplay" class="absolute inset-0 flex items-center justify-center p-4"></div>
+        
+        <button onclick="closeContentViewer()" class="absolute top-4 right-4 px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg text-white font-semibold transition-all z-10">
+            Cerrar
+        </button>
+
+        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-sm px-6 py-3 rounded-lg border border-red-500/50">
+            <p class="text-red-400 text-sm flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+                Contenido protegido - Capturas deshabilitadas
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Constants
+        const ADMIN_PASSWORD = 'admin123';
+        let uploadType = 'image';
+        let uploadPreviewData = null;
+        let isUserMode = false;
+        let currentUserCode = null;
+        let contentViewed = false;
+
+        // Initialize
+        window.onload = function() {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+                document.getElementById('loginScreen').classList.remove('hidden');
+            }, 1000);
+            
+            // Setup protection
+            setupProtection();
+        };
+
+        // LocalStorage helpers
+        function getContents() {
+            return JSON.parse(localStorage.getItem('fresita-contents') || '[]');
+        }
+
+        function saveContents(contents) {
+            localStorage.setItem('fresita-contents', JSON.stringify(contents));
+        }
+
+        function getAccessCodes() {
+            return JSON.parse(localStorage.getItem('fresita-codes') || '[]');
+        }
+
+        function saveAccessCodes(codes) {
+            localStorage.setItem('fresita-codes', JSON.stringify(codes));
+        }
+
+        function getUsedCodes() {
+            return JSON.parse(localStorage.getItem('fresita-used-codes') || '[]');
+        }
+
+        function saveUsedCodes(codes) {
+            localStorage.setItem('fresita-used-codes', JSON.stringify(codes));
+        }
+
+        // Login functions
+        function toggleLoginMode() {
+            isUserMode = !isUserMode;
+            document.getElementById('adminLogin').classList.toggle('hidden');
+            document.getElementById('userAccess').classList.toggle('hidden');
+            document.getElementById('loginModeText').textContent = isUserMode ? 'Acceso Usuario' : 'Acceso Administrador';
+        }
+
+        function togglePasswordVisibility() {
+            const input = document.getElementById('adminPassword');
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        function adminLogin() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('adminPanel').classList.remove('hidden');
+                loadAdminData();
+            } else {
+                alert('Contraseña incorrecta');
+            }
+        }
+
+        function verifyAccessCode() {
+            const code = document.getElementById('accessCode').value.toUpperCase();
+            const codes = getAccessCodes();
+            const usedCodes = getUsedCodes();
+            
+            const validCode = codes.find(c => c.code === code && !c.used);
+            
+            if (validCode) {
+                // Mark as used
+                const updatedCodes = codes.map(c => 
+                    c.code === code ? { ...c, used: true } : c
+                );
+                saveAccessCodes(updatedCodes);
+                
+                usedCodes.push({ code: code, usedAt: new Date().toISOString() });
+                saveUsedCodes(usedCodes);
+                
+                currentUserCode = code;
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('userView').classList.remove('hidden');
+                document.getElementById('userCode').textContent = code;
+                loadUserContent();
+            } else if (usedCodes.find(c => c.code === code)) {
+                alert('Este código ya fue utilizado');
+            } else {
+                alert('Código inválido');
+            }
+        }
+
+        function logout() {
+            document.getElementById('adminPanel').classList.add('hidden');
+            document.getElementById('userView').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            currentUserCode = null;
+            contentViewed = false;
+        }
+
+        // Upload functions
+        function setUploadType(type) {
+            uploadType = type;
+            document.getElementById('imageBtn').className = type === 'image' 
+                ? 'flex-1 py-3 px-4 rounded-lg border bg-purple-600 border-purple-500 text-white transition-all'
+                : 'flex-1 py-3 px-4 rounded-lg border bg-white/5 border-indigo-500/30 text-gray-400 hover:bg-white/10 transition-all';
+            document.getElementById('videoBtn').className = type === 'video'
+                ? 'flex-1 py-3 px-4 rounded-lg border bg-purple-600 border-purple-500 text-white transition-all'
+                : 'flex-1 py-3 px-4 rounded-lg border bg-white/5 border-indigo-500/30 text-gray-400 hover:bg-white/10 transition-all';
+            
+            const fileInput = document.getElementById('fileInput');
+            fileInput.accept = type === 'image' ? 'image/*' : 'video/*';
+            document.getElementById('uploadTypeText').textContent = type === 'image' ? 'JPG, PNG, GIF' : 'MP4, MOV, AVI';
+            
+            // Clear preview
+            uploadPreviewData = null;
+            document.getElementById('uploadPlaceholder').classList.remove('hidden');
+            document.getElementById('uploadPreview').classList.add('hidden');
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadPreviewData = e.target.result;
+                    const preview = document.getElementById('uploadPreview');
+                    preview.innerHTML = uploadType === 'image'
+                        ? `<img src="${uploadPreviewData}" class="w-full h-full object-contain rounded-lg" draggable="false">`
+                        : `<video src="${uploadPreviewData}" controls class="w-full h-full rounded-lg"></video>`;
+                    document.getElementById('uploadPlaceholder').classList.add('hidden');
+                    preview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveContent() {
+            if (!uploadPreviewData) {
+                alert('Por favor selecciona un archivo');
+                return;
+            }
+
+            const contents = getContents();
+            const newContent = {
+                id: Date.now(),
+                type: uploadType,
+                data: uploadPreviewData,
+                description: document.getElementById('uploadDescription').value,
+                uploadedAt: new Date().toISOString(),
+                views: 0
+            };
+
+            contents.push(newContent);
+            saveContents(contents);
+            
+            // Reset form
+            uploadPreviewData = null;
+            document.getElementById('fileInput').value = '';
+            document.getElementById('uploadDescription').value = '';
+            document.getElementById('uploadPlaceholder').classList.remove('hidden');
+            document.getElementById('uploadPreview').classList.add('hidden');
+            
+            alert('Contenido subido exitosamente');
+            loadAdminData();
+        }
+
+        // Access code functions
+        function generateAccessCode() {
+            const characters = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let code = '';
+            for (let i = 0; i < 8; i++) {
+                code += characters.charAt(Math.floor(Math.random() * characters.length));
+                if (i === 3) code += '-';
+            }
+            
+            const codes = getAccessCodes();
+            codes.push({
+                code: code,
+                createdAt: new Date().toISOString(),
+                used: false
+            });
+            saveAccessCodes(codes);
+            loadAccessCodes();
+        }
+
+        function copyCode(code) {
+            navigator.clipboard.writeText(code);
+            alert('Código copiado al portapapeles');
+        }
+
+        function loadAccessCodes() {
+            const codes = getAccessCodes();
+            const list = document.getElementById('codesList');
+            
+            if (codes.length === 0) {
+                list.innerHTML = '<p class="text-center text-gray-400 py-8">No hay códigos generados</p>';
+            } else {
+                list.innerHTML = codes.map(code => `
+                    <div class="p-4 rounded-lg border ${code.used ? 'bg-red-900/20 border-red-500/30' : 'bg-green-900/20 border-green-500/30'}">
+                        <div class="flex items-center justify-between">
+                            <span class="font-mono text-lg font-bold">${code.code}</span>
+                            ${!code.used ? `<button onclick="copyCode('${code.code}')" class="p-2 hover:bg-white/10 rounded-lg transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                            </button>` : ''}
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1">${code.used ? 'Usado' : 'Disponible'}</p>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Content functions
+        function loadAdminData() {
+            loadAccessCodes();
+            loadContentGallery();
+        }
+
+        function loadContentGallery() {
+            const contents = getContents();
+            const gallery = document.getElementById('contentGallery');
+            document.getElementById('contentCount').textContent = contents.length;
+            
+            if (contents.length === 0) {
+                gallery.innerHTML = '<p class="col-span-full text-center text-gray-400 py-12">No hay contenido subido aún</p>';
+            } else {
+                gallery.innerHTML = contents.map(content => `
+                    <div class="group relative bg-white/5 rounded-lg overflow-hidden border border-indigo-500/20 hover:border-indigo-500/50 transition-all">
+                        <div class="aspect-square">
+                            ${content.type === 'image' 
+                                ? `<img src="${content.data}" class="w-full h-full object-cover" draggable="false">`
+                                : `<video src="${content.data}" class="w-full h-full object-cover"></video>`
+                            }
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div class="absolute bottom-0 left-0 right-0 p-3">
+                                <p class="text-xs text-gray-300 mb-2">${content.views} vistas</p>
+                                <div class="flex gap-2">
+                                    <button onclick="viewContentAdmin(${content.id})" class="flex-1 py-2 px-3 bg-purple-600 hover:bg-purple-700 rounded text-sm transition-all">Ver</button>
+                                    <button onclick="deleteContent(${content.id})" class="py-2 px-3 bg-red-600 hover:bg-red-700 rounded transition-all">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function viewContentAdmin(id) {
+            const contents = getContents();
+            const content = contents.find(c => c.id === id);
+            if (content) {
+                showContentViewer(content, true);
+            }
+        }
+
+        function deleteContent(id) {
+            if (confirm('¿Estás seguro de eliminar este contenido?')) {
+                const contents = getContents().filter(c => c.id !== id);
+                saveContents(contents);
+                loadContentGallery();
+            }
+        }
+
+        function loadUserContent() {
+            const contents = getContents();
+            const gallery = document.getElementById('userContentGallery');
+            
+            if (contents.length === 0) {
+                gallery.innerHTML = `
+                    <div class="col-span-full bg-black/40 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-12 text-center">
+                        <svg class="w-16 h-16 mx-auto mb-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                        <p class="text-xl text-gray-400">No hay contenido disponible en este momento</p>
+                    </div>
+                `;
+            } else {
+                gallery.innerHTML = contents.map(content => `
+                    <div onclick="${contentViewed ? '' : `viewContentUser(${content.id})`}" 
+                         class="group relative bg-black/40 backdrop-blur-xl border border-purple-500/30 rounded-xl overflow-hidden hover:border-purple-500/70 transition-all ${contentViewed ? '' : 'cursor-pointer'}">
+                        <div class="aspect-square">
+                            ${content.type === 'image' 
+                                ? `<img src="${content.data}" class="w-full h-full object-cover ${contentViewed ? 'blur-sm' : 'blur-sm group-hover:blur-none'} transition-all" draggable="false">`
+                                : `<video src="${content.data}" class="w-full h-full object-cover ${contentViewed ? 'blur-sm' : 'blur-sm group-hover:blur-none'} transition-all"></video>`
+                            }
+                        </div>
+                        ${!contentViewed ? `
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <div class="text-center">
+                                    <svg class="w-12 h-12 mx-auto mb-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                    <p class="text-white font-semibold">Ver contenido</p>
+                                </div>
+                            </div>
+                        ` : `
+                            <div class="absolute inset-0 bg-black/80 flex items-center justify-center">
+                                <svg class="w-12 h-12 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                </svg>
+                            </div>
+                        `}
+                    </div>
+                `).join('');
+            }
+        }
+
+        function viewContentUser(id) {
+            const contents = getContents();
+            const content = contents.find(c => c.id === id);
+            if (content) {
+                // Update views
+                const updated = contents.map(c => c.id === id ? {...c, views: c.views + 1} : c);
+                saveContents(updated);
+                
+                showContentViewer(content, false);
+                contentViewed = true;
+                document.getElementById('viewedWarning').classList.remove('hidden');
+            }
+        }
+
+        function showContentViewer(content, isAdmin) {
+            const viewer = document.getElementById('contentViewer');
+            const display = document.getElementById('contentDisplay');
+            
+            if (content.type === 'image') {
+                display.innerHTML = `<img src="${content.data}" class="max-w-full max-h-full object-contain pointer-events-none" draggable="false">`;
+            } else {
+                display.innerHTML = `<video src="${content.data}" controls controlsList="nodownload" disablePictureInPicture class="max-w-full max-h-full"></video>`;
+            }
+            
+            viewer.classList.remove('hidden');
+        }
+
+        function closeContentViewer() {
+            document.getElementById('contentViewer').classList.add('hidden');
+            if (!contentViewed) {
+                loadUserContent();
+            }
+        }
+
+        // Protection
+        function setupProtection() {
+            // Prevent right click
+            document.addEventListener('contextmenu', e => {
+                if (!document.getElementById('adminPanel').classList.contains('hidden')) return;
+                e.preventDefault();
+            });
+
+            // Prevent keyboard shortcuts
+            document.addEventListener('keydown', e => {
+                if (document.getElementById('adminPanel').classList.contains('hidden')) {
+                    // PrintScreen
+                    if (e.key === 'PrintScreen') {
+                        e.preventDefault();
+                        alert('Las capturas de pantalla están deshabilitadas');
+                        navigator.clipboard.writeText('');
+                    }
+                    // Ctrl+Shift+S or Cmd+Shift+S
+                    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 's') {
+                        e.preventDefault();
+                        alert('Las capturas de pantalla están deshabilitadas');
+                    }
+                    // F12
+                    if (e.key === 'F12') {
+                        e.preventDefault();
+                        alert('Las herramientas de desarrollo están deshabilitadas');
+                    }
+                }
+            });
+
+            document.addEventListener('keyup', e => {
+                if (document.getElementById('adminPanel').classList.contains('hidden')) {
+                    if (e.key === 'PrintScreen') {
+                        navigator.clipboard.writeText('');
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
